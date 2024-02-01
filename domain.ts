@@ -1,4 +1,3 @@
-import creditorsBySpendingCategories from "./creditorsBySpendingCategories";
 import { bankStatement } from "./parseCsvToBankStatement";
 import {
   BankStatement,
@@ -10,23 +9,29 @@ export const expenses = bankStatement.filter((entry) => entry.amount < 0);
 
 export const incomes = bankStatement.filter((entry) => entry.amount > 0);
 
-export const getCreditorSet = (expenses: BankStatement) =>
-  Array.from(new Set(expenses.map((entry) => entry.creditor)));
-
-export const getDebtorSet = (incomes: BankStatement) =>
-  Array.from(new Set(incomes.map((income) => income.creditor)));
-
 export const getExpensesFromCreditor = (creditor: string) => {
-  return expenses.filter((expense) =>
-    expense.creditor.toLowerCase().includes(creditor.toLowerCase())
-  );
+  const expensesFromCreditor = expenses.filter((expense) => {
+    return (
+      expense.creditor.toLowerCase().includes(creditor.toLowerCase()) ||
+      expense.reference.toLowerCase().includes(creditor.toLowerCase())
+    );
+  });
+  return expensesFromCreditor.length !== 0
+    ? expensesFromCreditor
+    : `creditor "${creditor}" not found in bank statement`;
 };
 
-// export const getIncomesFromDebtor = (debtor: string) => {
-//   return incomes.filter((income) =>
-//     income.creditor.toLowerCase().includes(debtor.toLowerCase())
-//   );
-// };
+export const getIncomesFromDebtor = (debtor: string) => {
+  const incomesFromDebtor = incomes.filter((income) => {
+    return (
+      income.creditor.toLowerCase().includes(debtor.toLowerCase()) ||
+      income.reference.toLowerCase().includes(debtor.toLowerCase())
+    );
+  });
+  return incomesFromDebtor.length !== 0
+    ? incomesFromDebtor
+    : `debtor "${debtor}" not found in bank statement`;
+};
 
 export const getExpensesBySpendingCategories = (
   creditorsBySpendingCategories: CreditorsBySpendingCategories
@@ -72,6 +77,25 @@ export const getExpensesBySpendingCategories = (
   return { expensesBySpendingCategories, missingEntries };
 };
 
+type Expenses = BankStatement;
+type Incomes = BankStatement;
+
+export const getTotalExpenses = (expenses: Expenses) =>
+  expenses.reduce((totalExpenses, expense) => {
+    return totalExpenses + expense.amount;
+  }, 0);
+
+export const getTotalIncomes = (incomes: Incomes) =>
+  incomes.reduce((totalIncomes, income) => {
+    return totalIncomes + income.amount;
+  }, 0);
+
+export const getTotalBalanceChange =
+  getTotalIncomes(incomes) + getTotalExpenses(expenses);
+
+/**
+ * the creditor/debtor is sometimes indentified by the reference and not the creditor entry
+ */
 // export const getAllExpensesByCreditors = (): ExpensesByCreditor => {
 //   const expensesByCreditor: ExpensesByCreditor = {};
 //   expenses.forEach((expense) => {
@@ -88,8 +112,9 @@ export const getExpensesBySpendingCategories = (
 //   });
 //   return expensesByCreditor;
 // };
-
-export const getTotalExpenses = () =>
-  expenses.reduce((totalExpenses, expense) => {
-    return totalExpenses + expense.amount;
-  }, 0);
+//
+// export const getCreditorSet = (expenses: BankStatement) =>
+//   Array.from(new Set(expenses.map((entry) => entry.creditor)));
+//
+// export const getDebtorSet = (incomes: BankStatement) =>
+//   Array.from(new Set(incomes.map((income) => income.creditor)));
