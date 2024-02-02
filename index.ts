@@ -1,10 +1,7 @@
 import { log } from "console";
 import creditorsBySpendingCategories from "./creditorsBySpendingCategories";
 import {
-  getExpensesBySpendingCategories,
-  getExpensesFromCreditor,
-  getIncomesFromDebtor,
-  incomes,
+  getExpensesBySpendingCategories
 } from "./domain";
 
 const expensesBySpendingCategories = getExpensesBySpendingCategories(
@@ -12,3 +9,5 @@ const expensesBySpendingCategories = getExpensesBySpendingCategories(
 );
 
 log(expensesBySpendingCategories);
+
+// log({getTotalBalanceChange})

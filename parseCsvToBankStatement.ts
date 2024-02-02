@@ -2,6 +2,7 @@ import { parse } from "csv-parse/sync";
 import fs from "fs";
 import { ParsedCsvRow } from "./types";
 import { parseCommaToFloat } from "./lib";
+import Decimal from "decimal.js";
 
 const filename = "january-2024";
 
@@ -16,7 +17,7 @@ export const parsedCsv: ParsedCsvRow[] = parse(csv, {
 export const getBankStatement = (parsedCsv: ParsedCsvRow[]) => {
   return parsedCsv.map((ParsedCsvRow) => {
     return {
-      amount: parseCommaToFloat(ParsedCsvRow.Betrag),
+      amount: new Decimal(parseCommaToFloat(ParsedCsvRow.Betrag)),
       creditor: ParsedCsvRow["Beguenstigter/Zahlungspflichtiger"],
       reference: ParsedCsvRow.Verwendungszweck,
     };

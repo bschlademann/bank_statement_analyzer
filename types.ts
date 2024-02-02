@@ -1,5 +1,7 @@
+import Decimal from "decimal.js";
+
 export type BankStatement = {
-  amount: number;
+  amount: Decimal;
   creditor: string;
   reference: string;
 }[];
@@ -11,10 +13,9 @@ export type ExpensesByCreditor = {
   };
 };
 
-export type CsvDataRow = Record<
-  string,
-  string | number | boolean | null | undefined
->;
+
+export type Expenses = BankStatement;
+export type Incomes = BankStatement;
 
 export type ParsedCsvRow = {
   Auftragskonto: string;
