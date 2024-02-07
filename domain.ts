@@ -1,35 +1,40 @@
 import Decimal from "decimal.js";
-import { bankStatement } from "./parseCsvToBankStatement";
-import { BankStatement, CreditorsBySpendingCategories, Expenses, Incomes } from "./types";
+import {
+  BankStatement,
+  CreditorsBySpendingCategories,
+  Expenses,
+  Incomes,
+} from "./types";
 
-export const expenses = bankStatement.filter((entry) =>
-  entry.amount.lessThan(0)
-);
-export const incomes = bankStatement.filter((entry) =>
-  entry.amount.greaterThan(0)
-);
+export const getExpenses = (bankStatement: BankStatement) =>
+  bankStatement.filter((entry) => entry.amount.lessThan(0));
 
-export const getExpensesToCreditor = (creditor: string) => {
-  const expensesFromCreditor = expenses.filter(
-    (expense) =>
-      expense.creditor.toLowerCase().includes(creditor.toLowerCase()) ||
-      expense.reference.toLowerCase().includes(creditor.toLowerCase())
-  );
-  return expensesFromCreditor.length !== 0
-    ? expensesFromCreditor
-    : `creditor "${creditor}" not found in bank statement`;
-};
+export const getIncomes = (bankStatement: BankStatement) =>
+  bankStatement.filter((entry) => entry.amount.greaterThan(0));
 
-export const getIncomesFromDebtor = (debtor: string) => {
-  const incomesFromDebtor = incomes.filter(
-    (income) =>
-      income.creditor.toLowerCase().includes(debtor.toLowerCase()) ||
-      income.reference.toLowerCase().includes(debtor.toLowerCase())
-  );
-  return incomesFromDebtor.length !== 0
-    ? incomesFromDebtor
-    : `debtor "${debtor}" not found in bank statement`;
-};
+export const createGetExpensesToCreditor =
+  (bankStatement: BankStatement) => (creditor: string) => {
+    const expensesFromCreditor = getExpenses(bankStatement).filter(
+      (expense) =>
+        expense.creditor.toLowerCase().includes(creditor.toLowerCase()) ||
+        expense.reference.toLowerCase().includes(creditor.toLowerCase())
+    );
+    return expensesFromCreditor.length !== 0
+      ? expensesFromCreditor
+      : `creditor "${creditor}" not found in bank statement`;
+  };
+
+export const createGetIncomesFromDebtor =
+  (bankStatement: BankStatement) => (debtor: string) => {
+    const incomesFromDebtor = getIncomes(bankStatement).filter(
+      (income) =>
+        income.creditor.toLowerCase().includes(debtor.toLowerCase()) ||
+        income.reference.toLowerCase().includes(debtor.toLowerCase())
+    );
+    return incomesFromDebtor.length !== 0
+      ? incomesFromDebtor
+      : `debtor "${debtor}" not found in bank statement`;
+  };
 
 export const getTotalExpenses = (expenses: Expenses) =>
   expenses.reduce((totalExpenses, expense) => {
@@ -41,9 +46,9 @@ export const getTotalIncomes = (incomes: Incomes) =>
     return totalIncomes.plus(income.amount);
   }, new Decimal(0));
 
-  export const getExpensesBySpendingCategories = (
-    creditorsBySpendingCategories: CreditorsBySpendingCategories
-  ) => {
+export const createGetExpensesBySpendingCategories =
+  (bankStatement: BankStatement) =>
+  (creditorsBySpendingCategories: CreditorsBySpendingCategories) => {
     const expensesBySpendingCategories = Object.keys(
       creditorsBySpendingCategories
     ).reduce(
@@ -57,7 +62,8 @@ export const getTotalIncomes = (incomes: Incomes) =>
       {}
     );
     const missingEntries: { creditor: string; reference: string }[] = [];
-  
+
+    const expenses = getExpenses(bankStatement);
     expenses.forEach((expense) => {
       let found = false;
       const spendingCategories = Object.keys(creditorsBySpendingCategories);
@@ -74,7 +80,9 @@ export const getTotalIncomes = (incomes: Incomes) =>
           ) {
             found = true;
             expensesBySpendingCategories[spendingCategory] =
-              expensesBySpendingCategories[spendingCategory].plus(expense.amount);
+              expensesBySpendingCategories[spendingCategory].plus(
+                expense.amount
+              );
           }
         });
       });
@@ -82,14 +90,15 @@ export const getTotalIncomes = (incomes: Incomes) =>
         missingEntries.push(expense);
       }
     });
-  
+
     return { expensesBySpendingCategories, missingEntries };
   };
 
-export const getTotalBalanceChange = (bankStatement: BankStatement) => bankStatement.reduce(
-  (totalExpenses, expense) => totalExpenses.plus(expense.amount),
-  new Decimal(0)
-);
+export const getTotalBalanceChange = (bankStatement: BankStatement) =>
+  bankStatement.reduce(
+    (totalExpenses, expense) => totalExpenses.plus(expense.amount),
+    new Decimal(0)
+  );
 
 /**
  * the creditor/debtor is sometimes indentified by the reference and not the creditor entry
