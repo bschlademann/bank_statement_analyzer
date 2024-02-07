@@ -19,8 +19,12 @@ export const createGetExpensesToCreditor =
         expense.creditor.toLowerCase().includes(creditor.toLowerCase()) ||
         expense.reference.toLowerCase().includes(creditor.toLowerCase())
     );
+    const totalExpenses = expensesFromCreditor.reduce(
+      (total, expense) => total.plus(expense.amount),
+      new Decimal(0)
+    );
     return expensesFromCreditor.length !== 0
-      ? expensesFromCreditor
+      ? { totalExpenses, expensesFromCreditor }
       : `creditor "${creditor}" not found in bank statement`;
   };
 
@@ -31,8 +35,12 @@ export const createGetIncomesFromDebtor =
         income.creditor.toLowerCase().includes(debtor.toLowerCase()) ||
         income.reference.toLowerCase().includes(debtor.toLowerCase())
     );
+    const totalIncomes = incomesFromDebtor.reduce(
+      (total, income) => total.plus(income.amount),
+      new Decimal(0)
+    );
     return incomesFromDebtor.length !== 0
-      ? incomesFromDebtor
+      ? { totalIncomes, incomesFromDebtor }
       : `debtor "${debtor}" not found in bank statement`;
   };
 
@@ -99,6 +107,10 @@ export const getTotalBalanceChange = (bankStatement: BankStatement) =>
     (totalExpenses, expense) => totalExpenses.plus(expense.amount),
     new Decimal(0)
   );
+
+/**
+ * für bestimmte kategorie auflisten, bei welchem creditor wie viel ausgeben wurde
+ */
 
 /**
  * the creditor/debtor is sometimes indentified by the reference and not the creditor entry
