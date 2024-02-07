@@ -1,6 +1,6 @@
 import Decimal from "decimal.js";
 import { bankStatement } from "./parseCsvToBankStatement";
-import { CreditorsBySpendingCategories, Expenses, Incomes } from "./types";
+import { BankStatement, CreditorsBySpendingCategories, Expenses, Incomes } from "./types";
 
 export const expenses = bankStatement.filter((entry) =>
   entry.amount.lessThan(0)
@@ -86,8 +86,9 @@ export const getTotalIncomes = (incomes: Incomes) =>
     return totalIncomes.plus(income.amount);
   }, new Decimal(0));
 
-export const getTotalBalanceChange = getTotalIncomes(incomes).plus(
-  getTotalExpenses(expenses)
+export const getTotalBalanceChange = (bankStatement: BankStatement) => bankStatement.reduce(
+  (totalExpenses, expense) => totalExpenses.plus(expense.amount),
+  new Decimal(0)
 );
 
 /**
