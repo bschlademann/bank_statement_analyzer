@@ -9,7 +9,7 @@ export const incomes = bankStatement.filter((entry) =>
   entry.amount.greaterThan(0)
 );
 
-export const getExpensesFromCreditor = (creditor: string) => {
+export const getExpensesToCreditor = (creditor: string) => {
   const expensesFromCreditor = expenses.filter(
     (expense) =>
       expense.creditor.toLowerCase().includes(creditor.toLowerCase()) ||
@@ -31,51 +31,6 @@ export const getIncomesFromDebtor = (debtor: string) => {
     : `debtor "${debtor}" not found in bank statement`;
 };
 
-export const getExpensesBySpendingCategories = (
-  creditorsBySpendingCategories: CreditorsBySpendingCategories
-) => {
-  const expensesBySpendingCategories = Object.keys(
-    creditorsBySpendingCategories
-  ).reduce(
-    (
-      expensesBySpendingCategories: { [spendingCategory: string]: Decimal },
-      category
-    ) => {
-      expensesBySpendingCategories[category] = new Decimal(0);
-      return expensesBySpendingCategories;
-    },
-    {}
-  );
-  const missingEntries: { creditor: string; reference: string }[] = [];
-
-  expenses.forEach((expense) => {
-    let found = false;
-    const spendingCategories = Object.keys(creditorsBySpendingCategories);
-    spendingCategories.forEach((spendingCategory) => {
-      const creditorList = creditorsBySpendingCategories[spendingCategory];
-      creditorList.forEach((creditorFromList) => {
-        if (
-          expense.creditor
-            .toLowerCase()
-            .includes(creditorFromList.toLowerCase()) ||
-          expense.reference
-            .toLowerCase()
-            .includes(creditorFromList.toLowerCase())
-        ) {
-          found = true;
-          expensesBySpendingCategories[spendingCategory] =
-            expensesBySpendingCategories[spendingCategory].plus(expense.amount);
-        }
-      });
-    });
-    if (!found) {
-      missingEntries.push(expense);
-    }
-  });
-
-  return { expensesBySpendingCategories, missingEntries };
-};
-
 export const getTotalExpenses = (expenses: Expenses) =>
   expenses.reduce((totalExpenses, expense) => {
     return totalExpenses.plus(expense.amount);
@@ -85,6 +40,51 @@ export const getTotalIncomes = (incomes: Incomes) =>
   incomes.reduce((totalIncomes, income) => {
     return totalIncomes.plus(income.amount);
   }, new Decimal(0));
+
+  export const getExpensesBySpendingCategories = (
+    creditorsBySpendingCategories: CreditorsBySpendingCategories
+  ) => {
+    const expensesBySpendingCategories = Object.keys(
+      creditorsBySpendingCategories
+    ).reduce(
+      (
+        expensesBySpendingCategories: { [spendingCategory: string]: Decimal },
+        category
+      ) => {
+        expensesBySpendingCategories[category] = new Decimal(0);
+        return expensesBySpendingCategories;
+      },
+      {}
+    );
+    const missingEntries: { creditor: string; reference: string }[] = [];
+  
+    expenses.forEach((expense) => {
+      let found = false;
+      const spendingCategories = Object.keys(creditorsBySpendingCategories);
+      spendingCategories.forEach((spendingCategory) => {
+        const creditorList = creditorsBySpendingCategories[spendingCategory];
+        creditorList.forEach((creditorFromList) => {
+          if (
+            expense.creditor
+              .toLowerCase()
+              .includes(creditorFromList.toLowerCase()) ||
+            expense.reference
+              .toLowerCase()
+              .includes(creditorFromList.toLowerCase())
+          ) {
+            found = true;
+            expensesBySpendingCategories[spendingCategory] =
+              expensesBySpendingCategories[spendingCategory].plus(expense.amount);
+          }
+        });
+      });
+      if (!found) {
+        missingEntries.push(expense);
+      }
+    });
+  
+    return { expensesBySpendingCategories, missingEntries };
+  };
 
 export const getTotalBalanceChange = (bankStatement: BankStatement) => bankStatement.reduce(
   (totalExpenses, expense) => totalExpenses.plus(expense.amount),
