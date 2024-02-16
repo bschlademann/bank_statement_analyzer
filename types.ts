@@ -1,4 +1,5 @@
 import Decimal from "decimal.js";
+import { creditorsBySpendingCategories } from "./creditorsBySpendingCategories";
 
 export type BankStatement = {
   amount: Decimal;
@@ -12,7 +13,6 @@ export type ExpensesByCreditor = {
     // references: string[]
   };
 };
-
 
 export type Expenses = BankStatement;
 export type Incomes = BankStatement;
@@ -38,4 +38,6 @@ export type ParsedCsvRow = {
 };
 
 
-export type CreditorsBySpendingCategories = { [key: string]: string[] }
+export type SpendingCategory = keyof typeof creditorsBySpendingCategories;
+
+export type CreditorsBySpendingCategories = { [key: string]: readonly string[] }
