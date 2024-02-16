@@ -1,5 +1,5 @@
 node_modules
-csv_files
+_csv_files
 dist/
 TODO.md
-creditorsBySpendingCategories.ts
+_creditorsBySpendingCategories.ts

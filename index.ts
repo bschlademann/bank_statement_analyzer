@@ -1,5 +1,4 @@
 import { log } from "console";
-import creditorsBySpendingCategories from "./creditorsBySpendingCategories";
 import {
   createGetExpensesBySpendingCategories,
   createGetExpensesToCreditor,
@@ -7,6 +6,7 @@ import {
   createGetIncomesFromDebtor,
 } from "./domain";
 import { getBankStatement } from "./parseCsvToBankStatement";
+import {creditorsBySpendingCategories} from "./creditorsBySpendingCategories";
 
 const filename = "january-2024";
 const bankStatement = getBankStatement(filename);
@@ -25,6 +25,6 @@ const expensesBySpendingCategories = getExpensesBySpendingCategories(
 
 const totalBalanceChange = getTotalBalanceChange(bankStatement)
 
+// log(getExpensesToCreditor("food_creditor_1"))
 log(expensesBySpendingCategories);
-
 // log({totalBalanceChange});

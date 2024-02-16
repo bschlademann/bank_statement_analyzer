@@ -1,0 +1,5 @@
+"Auftragskonto";"Buchungstag";"Valutadatum";"Buchungstext";"Verwendungszweck";"Glaeubiger ID";"Mandatsreferenz";"Kundenreferenz (End-to-End)";"Sammlerreferenz";"Lastschrift Ursprungsbetrag";"Auslagenersatz Ruecklastschrift";"Beguenstigter/Zahlungspflichtiger";"Kontonummer/IBAN";"BIC (SWIFT-Code)";"Betrag";"Waehrung";"Info"
+"XX00001";"01.01.24";"01.01.24";"FOLGELASTSCHRIFT";"Ihr einkauf bei food_creditor_1";"DE00";"0000";"0000";;;;"food_creditor_1";"XX0000";"0000";"-10";"EUR";"Umsatz vorgemerkt"
+"XX00001";"01.01.24";"01.01.24";"FOLGELASTSCHRIFT";"Ihr einkauf bei food_creditor_1";"DE00";"0000";"0000";;;;"food_creditor_1";"XX0000";"0000";"-20";"EUR";"Umsatz vorgemerkt"
+"XX00001";"01.01.24";"01.01.24";"FOLGELASTSCHRIFT";"Ihr einkauf bei food_creditor_2";"DE00";"0000";"0000";;;;"food_creditor_2";"XX0000";"0000";"-50";"EUR";"Umsatz vorgemerkt"
+"XX00001";"01.01.24";"01.01.24";"FOLGELASTSCHRIFT";"Ihr einkauf bei travel_creditor_1";"DE00";"0000";"0000";;;;"travel_creditor_1";"XX0000";"0000";"-100";"EUR";"Umsatz vorgemerkt"
