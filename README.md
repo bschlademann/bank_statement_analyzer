@@ -1,7 +1,8 @@
 
 ## to do
 # add
-! add dummy data and description on how to use this
+- handle non-existant filename in {getBankStatement} 
+- description on how to use this
 - list all entries from a spendingCategory
 - percentile calculation on getExpensesByCSpendingCategories
 - data visualisation
