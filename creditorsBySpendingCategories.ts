@@ -4,7 +4,7 @@ export const creditorsBySpendingCategories = {
     "food_creditor_2"
   ],
   travel: [
-    "creditor_1",
+    "travel_creditor_1",
     "travel_creditor_2"
   ]
 } as const;
