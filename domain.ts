@@ -4,6 +4,7 @@ import {
   CreditorsBySpendingCategories,
   Expenses,
   Incomes,
+  SpendingCategory,
 } from "./types";
 
 export const getExpenses = (bankStatement: BankStatement) =>
@@ -72,6 +73,7 @@ export const createGetExpensesBySpendingCategories =
     const missingEntries: { creditor: string; reference: string }[] = [];
 
     const expenses = getExpenses(bankStatement);
+    let totalExpenses = new Decimal(0);
     expenses.forEach((expense) => {
       let found = false;
       const spendingCategories = Object.keys(creditorsBySpendingCategories);
@@ -91,6 +93,7 @@ export const createGetExpensesBySpendingCategories =
               expensesBySpendingCategories[spendingCategory].plus(
                 expense.amount
               );
+              totalExpenses = totalExpenses.plus(expense.amount)
           }
         });
       });
@@ -99,7 +102,7 @@ export const createGetExpensesBySpendingCategories =
       }
     });
 
-    return { expensesBySpendingCategories, missingEntries };
+    return { totalExpenses, expensesBySpendingCategories, missingEntries };
   };
 
 export const getTotalBalanceChange = (bankStatement: BankStatement) =>
@@ -108,9 +111,14 @@ export const getTotalBalanceChange = (bankStatement: BankStatement) =>
     new Decimal(0)
   );
 
-/**
- * für bestimmte kategorie auflisten, bei welchem creditor wie viel ausgeben wurde
- */
+// export const createGetExpensesByCreditorInSpendingCategory =
+//   (creditorsBySpendingCategories: CreditorsBySpendingCategories) =>
+//   (spendingCategory: SpendingCategory) => {
+//     // get all expense entries of a category
+//     const creditorsOfCategory = creditorsBySpendingCategories[spendingCategory];
+//     const expensesByCreditorBySpendingCategory = null;
+//     creditorsOfCategory.map(creditor => {})
+//   };
 
 /**
  * the creditor/debtor is sometimes indentified by the reference and not the creditor entry
