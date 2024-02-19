@@ -4,6 +4,7 @@ import {
   CreditorsBySpendingCategories,
   Expenses,
   Incomes,
+  MissingEntries,
   SpendingCategory,
 } from "./types";
 
@@ -58,9 +59,10 @@ export const getTotalIncomes = (incomes: Incomes) =>
 export const createGetExpensesBySpendingCategories =
   (bankStatement: BankStatement) =>
   (creditorsBySpendingCategories: CreditorsBySpendingCategories) => {
-    const expensesBySpendingCategories = Object.keys(
-      creditorsBySpendingCategories
-    ).reduce(
+
+    const spendingCategories = Object.keys(creditorsBySpendingCategories);
+
+    const expensesBySpendingCategories = spendingCategories.reduce(
       (
         expensesBySpendingCategories: { [spendingCategory: string]: Decimal },
         category
@@ -70,37 +72,57 @@ export const createGetExpensesBySpendingCategories =
       },
       {}
     );
-    const missingEntries: { creditor: string; reference: string }[] = [];
 
     const expenses = getExpenses(bankStatement);
     let totalExpenses = new Decimal(0);
+    const missingEntries: MissingEntries = [];
+
     expenses.forEach((expense) => {
       let found = false;
-      const spendingCategories = Object.keys(creditorsBySpendingCategories);
       spendingCategories.forEach((spendingCategory) => {
         const creditorList = creditorsBySpendingCategories[spendingCategory];
+
         creditorList.forEach((creditorFromList) => {
-          if (
+          const creditorFound =
             expense.creditor
               .toLowerCase()
               .includes(creditorFromList.toLowerCase()) ||
             expense.reference
               .toLowerCase()
-              .includes(creditorFromList.toLowerCase())
-          ) {
+              .includes(creditorFromList.toLowerCase());
+
+          if (creditorFound) {
             found = true;
             expensesBySpendingCategories[spendingCategory] =
               expensesBySpendingCategories[spendingCategory].plus(
                 expense.amount
               );
-              totalExpenses = totalExpenses.plus(expense.amount)
+            totalExpenses = totalExpenses.plus(expense.amount);
           }
         });
       });
+
       if (!found) {
         missingEntries.push(expense);
       }
+
     });
+
+    // {
+    //   expensesBySpendingCategories: {
+    //     totalExpenses: -180,
+    //     expensesBySpendingCategories: { food: -80, travel: -100 },
+    //     missingEntries: []
+    //   }
+    // }
+
+    // {
+    //   expensesBySpendingCategories: {
+    //     totalExpenses: -180,
+    //     expensesBySpendingCategories: { food: {value: -80, percentile: 0.44}, travel:{value: -100, percentile: 0.56 } },
+    //     missingEntries: []
+    //   }
+    // }
 
     return { totalExpenses, expensesBySpendingCategories, missingEntries };
   };

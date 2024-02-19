@@ -41,3 +41,5 @@ export type ParsedCsvRow = {
 export type SpendingCategory = keyof typeof creditorsBySpendingCategories;
 
 export type CreditorsBySpendingCategories = { [key: string]: readonly string[] }
+
+export type MissingEntries = { creditor: string; reference: string }[];

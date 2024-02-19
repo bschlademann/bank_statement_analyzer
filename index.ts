@@ -46,7 +46,7 @@ const expensesBySpendingCategories = getExpensesBySpendingCategories(
 const totalBalanceChange = getTotalBalanceChange(bankStatement);
 
 // log results here
-log({expensesBySpendingCategories})
+log(expensesBySpendingCategories)
 // log(getIncomesFromDebtor("foo"));
 // log(getExpensesToCreditor("food_creditor_1"));
 // log({ totalBalanceChange });
