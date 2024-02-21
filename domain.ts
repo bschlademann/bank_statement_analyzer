@@ -7,6 +7,7 @@ import {
   MissingEntries,
   SpendingCategory,
 } from "./types";
+import { creditorsBySpendingCategories } from "./creditorsBySpendingCategories";
 
 export const getExpenses = (bankStatement: BankStatement) =>
   bankStatement.filter((entry) => entry.amount.lessThan(0));
@@ -56,11 +57,18 @@ export const getTotalIncomes = (incomes: Incomes) =>
     return totalIncomes.plus(income.amount);
   }, new Decimal(0));
 
+export const createIsSpendingCategory = (creditorsBySpendingCategories: CreditorsBySpendingCategories) => (key: any): key is SpendingCategory => {
+  return Object.keys(creditorsBySpendingCategories).includes(key);
+};
+
+export const isSpendingCategory = createIsSpendingCategory(creditorsBySpendingCategories);
+
 export const createGetExpensesBySpendingCategories =
   (bankStatement: BankStatement) =>
   (creditorsBySpendingCategories: CreditorsBySpendingCategories) => {
-
-    const spendingCategories = Object.keys(creditorsBySpendingCategories);
+    const spendingCategories: SpendingCategory[] = Object.keys(
+      creditorsBySpendingCategories
+    ).filter(isSpendingCategory);
 
     const expensesBySpendingCategories = spendingCategories.reduce(
       (
@@ -105,7 +113,6 @@ export const createGetExpensesBySpendingCategories =
       if (!found) {
         missingEntries.push(expense);
       }
-
     });
 
     // {
@@ -124,7 +131,29 @@ export const createGetExpensesBySpendingCategories =
     //   }
     // }
 
-    return { totalExpenses, expensesBySpendingCategories, missingEntries };
+    // type DetailedExpensesBySpendingCategories = {
+    //   [key in SpendingCategory]: { value: Decimal; percentile: Decimal };
+    // };
+
+    // const detailedExpensesBySpendingCategories: DetailedExpensesBySpendingCategories =
+    //   spendingCategories.reduce((acc, category) => {
+    //     const amount = expensesBySpendingCategories[category];
+    //     const percentile = totalExpenses.isZero()
+    //       ? new Decimal(0)
+    //       : amount.dividedBy(totalExpenses).abs();
+    //     acc[category] = { value: amount, percentile: percentile.toNumber() };
+    //     return acc;
+    //   }, {});
+
+    // const addPercentile = (expensesBySpendingCategories) => {};
+
+    return {
+      expensesBySpendingCategories: {
+        totalExpenses,
+        expensesBySpendingCategories,
+        missingEntries,
+      },
+    };
   };
 
 export const getTotalBalanceChange = (bankStatement: BankStatement) =>
