@@ -1,4 +1,5 @@
 import { log } from "console";
+import { inspect } from "util";
 import {
   createGetExpensesBySpendingCategories,
   createGetExpensesToCreditor,
@@ -23,7 +24,7 @@ const getIncomesFromDebtor = createGetIncomesFromDebtor(bankStatement);
  *  - totalExpenses: Decimal - the sum of all categorized expenses.
  *  - expensesBySpendingCategories: Object - a mapping of spending categories to their respective total expenses.
  *  - missingEntries: Array - a list of transactions that couldn't be categorized into any of the predefined categories.
- * 
+ *
  * Example of return value:
  * {
  *   totalExpenses: Decimal('-1234.56'),
@@ -46,7 +47,8 @@ const expensesBySpendingCategories = getExpensesBySpendingCategories(
 const totalBalanceChange = getTotalBalanceChange(bankStatement);
 
 // log results here
-log(expensesBySpendingCategories)
+// inspect() ensures that the Objects nesten in expensesBySpendingCategories are displayed without getting truncated
+log(inspect(expensesBySpendingCategories, { depth: 3 }));
 // log(getIncomesFromDebtor("debtor_1"));
 // log(getExpensesToCreditor("food_creditor_1"));
 // log({ totalBalanceChange });
