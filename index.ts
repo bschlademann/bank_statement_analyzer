@@ -47,6 +47,6 @@ const totalBalanceChange = getTotalBalanceChange(bankStatement);
 
 // log results here
 log(expensesBySpendingCategories)
-// log(getIncomesFromDebtor("foo"));
+// log(getIncomesFromDebtor("debtor_1"));
 // log(getExpensesToCreditor("food_creditor_1"));
 // log({ totalBalanceChange });

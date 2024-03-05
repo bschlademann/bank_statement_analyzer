@@ -3,6 +3,7 @@ import {
   BankStatement,
   CreditorsBySpendingCategories,
   Expenses,
+  ExpensesBySpendingCategories,
   Incomes,
   MissingEntries,
   SpendingCategory,
@@ -57,15 +58,20 @@ export const getTotalIncomes = (incomes: Incomes) =>
     return totalIncomes.plus(income.amount);
   }, new Decimal(0));
 
-export const createIsSpendingCategory = (creditorsBySpendingCategories: CreditorsBySpendingCategories) => (key: any): key is SpendingCategory => {
-  return Object.keys(creditorsBySpendingCategories).includes(key);
-};
+export const createIsSpendingCategory =
+  (creditorsBySpendingCategories: CreditorsBySpendingCategories) =>
+  (key: any): key is SpendingCategory => {
+    return Object.keys(creditorsBySpendingCategories).includes(key);
+  };
 
-export const isSpendingCategory = createIsSpendingCategory(creditorsBySpendingCategories);
+export const isSpendingCategory = createIsSpendingCategory(
+  creditorsBySpendingCategories
+);
 
 export const createGetExpensesBySpendingCategories =
   (bankStatement: BankStatement) =>
   (creditorsBySpendingCategories: CreditorsBySpendingCategories) => {
+    
     const spendingCategories: SpendingCategory[] = Object.keys(
       creditorsBySpendingCategories
     ).filter(isSpendingCategory);
@@ -88,6 +94,7 @@ export const createGetExpensesBySpendingCategories =
     expenses.forEach((expense) => {
       let found = false;
       spendingCategories.forEach((spendingCategory) => {
+        
         const creditorList = creditorsBySpendingCategories[spendingCategory];
 
         creditorList.forEach((creditorFromList) => {
@@ -115,44 +122,27 @@ export const createGetExpensesBySpendingCategories =
       }
     });
 
-    // {
-    //   expensesBySpendingCategories: {
-    //     totalExpenses: -180,
-    //     expensesBySpendingCategories: { food: -80, travel: -100 },
-    //     missingEntries: []
-    //   }
-    // }
+    const addExpensePercentage = (
+      spendingCategories: SpendingCategory[],
+      expensesBySpendingCategories: ExpensesBySpendingCategories
+    ) => {
+      return spendingCategories.map((category) => {
+        const value = expensesBySpendingCategories[category];
+        const totalExpenses = getTotalExpenses(expenses);
+        const expensePercentage = value.div(totalExpenses);
+        return ({[category]: {value, expensePercentage}})
+      });
+    };
 
-    // {
-    //   expensesBySpendingCategories: {
-    //     totalExpenses: -180,
-    //     expensesBySpendingCategories: { food: {value: -80, percentile: 0.44}, travel:{value: -100, percentile: 0.56 } },
-    //     missingEntries: []
-    //   }
-    // }
-
-    // type DetailedExpensesBySpendingCategories = {
-    //   [key in SpendingCategory]: { value: Decimal; percentile: Decimal };
-    // };
-
-    // const detailedExpensesBySpendingCategories: DetailedExpensesBySpendingCategories =
-    //   spendingCategories.reduce((acc, category) => {
-    //     const amount = expensesBySpendingCategories[category];
-    //     const percentile = totalExpenses.isZero()
-    //       ? new Decimal(0)
-    //       : amount.dividedBy(totalExpenses).abs();
-    //     acc[category] = { value: amount, percentile: percentile.toNumber() };
-    //     return acc;
-    //   }, {});
-
-    // const addPercentile = (expensesBySpendingCategories) => {};
+    const expensesWithPercentage = addExpensePercentage(
+      spendingCategories,
+      expensesBySpendingCategories
+    );
 
     return {
-      expensesBySpendingCategories: {
-        totalExpenses,
-        expensesBySpendingCategories,
-        missingEntries,
-      },
+      totalExpenses,
+      expensesWithPercentage,
+      missingEntries,
     };
   };
 
@@ -161,38 +151,3 @@ export const getTotalBalanceChange = (bankStatement: BankStatement) =>
     (totalExpenses, expense) => totalExpenses.plus(expense.amount),
     new Decimal(0)
   );
-
-// export const createGetExpensesByCreditorInSpendingCategory =
-//   (creditorsBySpendingCategories: CreditorsBySpendingCategories) =>
-//   (spendingCategory: SpendingCategory) => {
-//     // get all expense entries of a category
-//     const creditorsOfCategory = creditorsBySpendingCategories[spendingCategory];
-//     const expensesByCreditorBySpendingCategory = null;
-//     creditorsOfCategory.map(creditor => {})
-//   };
-
-/**
- * the creditor/debtor is sometimes indentified by the reference and not the creditor entry
- */
-// export const getAllExpensesByCreditors = (): ExpensesByCreditor => {
-//   const expensesByCreditor: ExpensesByCreditor = {};
-//   expenses.forEach((expense) => {
-//     const { amount, creditor, reference } = expense;
-//     if (!expensesByCreditor[creditor]) {
-//       expensesByCreditor[creditor] = {
-//         totalAmount: amount,
-//         // references: [reference],
-//       };
-//     } else {
-//       expensesByCreditor[creditor].totalAmount += amount;
-//       //   expensesByCreditor[creditor].references.push(reference);
-//     }
-//   });
-//   return expensesByCreditor;
-// };
-//
-// export const getCreditorSet = (expenses: BankStatement) =>
-//   Array.from(new Set(expenses.map((entry) => entry.creditor)));
-//
-// export const getDebtorSet = (incomes: BankStatement) =>
-//   Array.from(new Set(incomes.map((income) => income.creditor)));

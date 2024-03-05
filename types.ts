@@ -7,13 +7,6 @@ export type BankStatement = {
   reference: string;
 }[];
 
-export type ExpensesByCreditor = {
-  [creditor: string]: {
-    totalAmount: number;
-    // references: string[]
-  };
-};
-
 export type Expenses = BankStatement;
 export type Incomes = BankStatement;
 
@@ -37,9 +30,10 @@ export type ParsedCsvRow = {
   Info: string;
 };
 
-
 export type SpendingCategory = keyof typeof creditorsBySpendingCategories;
 
 export type CreditorsBySpendingCategories = { [key: string]: readonly string[] }
 
 export type MissingEntries = { creditor: string; reference: string }[];
+
+export type ExpensesBySpendingCategories = {[spendingCategory: string]: Decimal}
