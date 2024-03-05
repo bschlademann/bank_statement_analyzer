@@ -58,7 +58,7 @@ travel: [
 ```
 
 4. in index.ts uncomment the loggers you want to use
-ExpensesBySpendingCategories has a key "missingentries" that shows the name and reference of statement entries that were not found in creditorsBySpendingCategories. Both name and reference are necessary as the names of creditors can come up in either and it depends on the creditor where that happens. 
+   ExpensesBySpendingCategories has a key "missingentries" that shows the name and reference of statement entries that were not found in creditorsBySpendingCategories. Both name and reference are necessary as the names of creditors can come up in either and it depends on the creditor where that happens.
 5. To run the analyzer:
 
 ```bash
@@ -66,20 +66,6 @@ npm start
 # or using Node directly
 node index.js
 ```
-
-## my to do
-
-# add
-- percentile calculation on getExpensesByCSpendingCategories
-- data visualisation
-- fuzzy search / recommendations when creditor/debtor is not found
-- hosting on aws
-
-# fix
-
-- handle non-existant filename in {getBankStatement}
-- handle non-fitting csv files
-- handle multiple entries of same vendor in different spending categories
 
 ## Contributing
 
