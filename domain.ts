@@ -129,7 +129,7 @@ export const createGetExpensesBySpendingCategories =
       return spendingCategories.map((category) => {
         const value = expensesBySpendingCategories[category];
         const totalExpenses = getTotalExpenses(expenses);
-        const expensePercentage = value.div(totalExpenses);
+        const expensePercentage = value.div(totalExpenses).toDecimalPlaces(2);
         return ({[category]: {value, expensePercentage}})
       });
     };
