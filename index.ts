@@ -47,7 +47,7 @@ const expensesBySpendingCategories = getExpensesBySpendingCategories(
 const totalBalanceChange = getTotalBalanceChange(bankStatement);
 
 // log results here
-// inspect() ensures that the Objects nesten in expensesBySpendingCategories are displayed without getting truncated
+// inspect() ensures that the Objects nested in expensesBySpendingCategories are displayed without getting truncated
 log(inspect(expensesBySpendingCategories, { depth: 3 }));
 // log(getIncomesFromDebtor("debtor_1"));
 // log(getExpensesToCreditor("food_creditor_1"));

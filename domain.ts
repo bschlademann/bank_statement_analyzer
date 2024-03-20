@@ -8,7 +8,6 @@ import {
   MissingEntries,
   SpendingCategory,
 } from "./types";
-// import { creditorsBySpendingCategories } from "./creditorsBySpendingCategories";
 
 export const getCreditorsBySpendingCategories = () => {
   let creditorsBySpendingCategories;
