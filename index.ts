@@ -10,7 +10,7 @@ import {
 import { getBankStatement } from "./parseCsvToBankStatement";
 
 // update filename of csv here
-const filename = "january-2024";
+const filename = "february-2024";
 
 const bankStatement = getBankStatement(filename);
 const getExpensesToCreditor = createGetExpensesToCreditor(bankStatement);

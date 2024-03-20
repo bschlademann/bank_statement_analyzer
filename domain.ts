@@ -132,8 +132,26 @@ export const createGetExpensesBySpendingCategories =
 
       if (!found) {
         missingEntries.push(expense);
+        totalExpenses = totalExpenses.plus(expense.amount);
       }
     });
+
+    type ExpensesWithPercentage = {
+      [speendingCategory: string]: {
+          value: Decimal;
+          expensePercentage: Decimal;
+      };
+  }[]
+
+    const removeEmptyCategories = (
+      expensesWithPercentage: ExpensesWithPercentage
+    ): ExpensesWithPercentage => {
+      return expensesWithPercentage.filter(expense => 
+        Object.values(expense).some(spendingCategory => 
+          !spendingCategory.value.isZero()
+        )
+      );
+    };
 
     const addExpensePercentage = (
       spendingCategories: SpendingCategory[],
@@ -154,7 +172,7 @@ export const createGetExpensesBySpendingCategories =
 
     return {
       totalExpenses,
-      expensesWithPercentage,
+      expensesWithPercentage: removeEmptyCategories(expensesWithPercentage),
       missingEntries,
     };
   };
