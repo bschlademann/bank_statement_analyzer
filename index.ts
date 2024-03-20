@@ -5,9 +5,9 @@ import {
   createGetExpensesToCreditor,
   getTotalBalanceChange,
   createGetIncomesFromDebtor,
+  creditorsBySpendingCategories,
 } from "./domain";
 import { getBankStatement } from "./parseCsvToBankStatement";
-import { creditorsBySpendingCategories } from "./creditorsBySpendingCategories";
 
 // update filename of csv here
 const filename = "january-2024";

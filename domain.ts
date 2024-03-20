@@ -8,7 +8,23 @@ import {
   MissingEntries,
   SpendingCategory,
 } from "./types";
-import { creditorsBySpendingCategories } from "./creditorsBySpendingCategories";
+// import { creditorsBySpendingCategories } from "./creditorsBySpendingCategories";
+
+export const getCreditorsBySpendingCategories = () => {
+  let creditorsBySpendingCategories;
+  try {
+    // Try to load the private module
+    creditorsBySpendingCategories =
+      require("./myPrivateCreditorsBySpendingCategories").creditorsBySpendingCategories;
+  } catch (error) {
+    // If it fails, fall back to the public module
+    creditorsBySpendingCategories =
+      require("./creditorsBySpendingCategories").creditorsBySpendingCategories;
+  }
+  return creditorsBySpendingCategories;
+};
+
+export const creditorsBySpendingCategories = getCreditorsBySpendingCategories();
 
 export const getExpenses = (bankStatement: BankStatement) =>
   bankStatement.filter((entry) => entry.amount.lessThan(0));
@@ -71,7 +87,6 @@ export const isSpendingCategory = createIsSpendingCategory(
 export const createGetExpensesBySpendingCategories =
   (bankStatement: BankStatement) =>
   (creditorsBySpendingCategories: CreditorsBySpendingCategories) => {
-    
     const spendingCategories: SpendingCategory[] = Object.keys(
       creditorsBySpendingCategories
     ).filter(isSpendingCategory);
@@ -94,7 +109,6 @@ export const createGetExpensesBySpendingCategories =
     expenses.forEach((expense) => {
       let found = false;
       spendingCategories.forEach((spendingCategory) => {
-        
         const creditorList = creditorsBySpendingCategories[spendingCategory];
 
         creditorList.forEach((creditorFromList) => {
@@ -130,7 +144,7 @@ export const createGetExpensesBySpendingCategories =
         const value = expensesBySpendingCategories[category];
         const totalExpenses = getTotalExpenses(expenses);
         const expensePercentage = value.div(totalExpenses).toDecimalPlaces(2);
-        return ({[category]: {value, expensePercentage}})
+        return { [category]: { value, expensePercentage } };
       });
     };
 

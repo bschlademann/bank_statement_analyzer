@@ -1,4 +1,4 @@
 node_modules
-_csv_files
+my_private_csv_files
 dist/
-_creditorsBySpendingCategories.ts
+myPrivateCreditorsBySpendingCategories.ts
