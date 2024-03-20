@@ -1,5 +1,5 @@
 # add
-
+- error handling
 - data visualisation
 - fuzzy search / recommendations when creditor/debtor is not found
 - hosting on aws
