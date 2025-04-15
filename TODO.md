@@ -1,8 +1,11 @@
 # add
+- change structure of expensesWithPercentage from array containing objects to object containing keys
+- getMonthlyAverage -> look at dates, get number of months, devide category amount by number of months for each category 
+- chatGpt catch in domain.ts -> createGetExpensesBySpendingCategories -> see FIXME
 - error handling
 - data visualisation
 - fuzzy search / recommendations when creditor/debtor is not found
-- hosting on aws
+- hosting (on aws? dome free hoster instead)
 
 # fix
 
