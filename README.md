@@ -1,76 +1,99 @@
-# Simple Sparkasse Bank Statement Analyzer
+# Bank Statement Analyzer
 
-## Description
-
-The Simple Bank Statement Analyzer is a TypeScript project designed to process bank statements from the Sparkasse, enabling users to analyze their financial transactions categorized by expenses and incomes. It features functionalities to categorize transactions into predefined spending categories, calculate total expenses and incomes, and identify transactions not matching any category.
+A TypeScript-based tool for analyzing bank statements from CSV files. This project helps you categorize and analyze your expenses and incomes, providing insights into your spending patterns.
 
 ## Features
 
-- expenses by spending categories, highlighting transactions not categorized under any spending category
-- expenses to a creditor
-- incomes from a debtor
-- total balance change
+- Parse bank statement CSV files
+- Categorize expenses into spending categories
+- Calculate total expenses and incomes
+- Track expenses by creditor
+- Track incomes by debtor
+- Calculate expense percentages by category
+- Support for both public and private CSV files and configurations
+
+## Prerequisites
+
+- Node.js (v14 or higher)
+- npm (v6 or higher)
 
 ## Installation
 
-### Prerequisites
-
-- Node.js
-- npm or yarn
-
-### Steps
-
 1. Clone the repository:
-
 ```bash
-git clone https://github.com/bschlademann/bank_statement_analyzer.git
-```
-
-2. Navigate to the project directory:
-
-```bash
+git clone <repository-url>
 cd bank_statement_analyzer
 ```
 
-3. Install dependencies:
-
+2. Install dependencies:
 ```bash
 npm install
-# or if you use yarn
-yarn install
 ```
+
+## Project Structure
+
+- `csv_files/` - Public CSV files for bank statements
+- `my_private_csv_files/` - Private CSV files (not tracked in git)
+- `src/` - Source code files
+  - `domain.ts` - Core business logic
+  - `parseCsvToBankStatement.ts` - CSV parsing functionality
+  - `types.ts` - TypeScript type definitions
+  - `creditorsBySpendingCategories.ts` - Public spending category mappings
+  - `myPrivateCreditorsBySpendingCategories.ts` - Private spending category mappings
 
 ## Usage
 
-1. Export a csv file from your sparkasse online banking and put it in csv_files/
-2. Update the filename variable in the index.ts with the name of your bank statement file
-3. Update the object in creditorsBySpendingCategories.ts with your own spending categories. The keys are the categories and the values the coresponding creditors as an array of strings.
+1. Place your bank statement CSV files in either:
+   - `csv_files/` for public files
+   - `my_private_csv_files/` for private files
 
-```js
-food: [
-  "food_creditor_1",
-  "food_creditor_2"
-],
-travel: [
-  "creditor_1",
-  "travel_creditor_2"
-]
-```
+2. Configure your spending categories in:
+   - `creditorsBySpendingCategories.ts` for public categories
+   - `myPrivateCreditorsBySpendingCategories.ts` for private categories
 
-4. in index.ts uncomment the loggers you want to use
-   ExpensesBySpendingCategories has a key "missingentries" that shows the name and reference of statement entries that were not found in creditorsBySpendingCategories. Both name and reference are necessary as the names of creditors can come up in either and it depends on the creditor where that happens.
-5. To run the analyzer:
-
+3. Run the application:
 ```bash
 npm start
-# or using Node directly
-node index.js
 ```
+
+## CSV Format
+
+The application expects CSV files with the following columns:
+- `Betrag` - Amount
+- `Beguenstigter/Zahlungspflichtiger` - Creditor/Debtor
+- `Verwendungszweck` - Reference/Purpose
+
+## Available Scripts
+
+- `npm run build` - Compile TypeScript to JavaScript
+- `npm run compile` - Compile and run the application
+- `npm start` - Start the application with nodemon for development
+- `npm test` - Run tests (currently not implemented)
+
+## Dependencies
+
+- `csv` - For parsing CSV files
+- `decimal.js` - For precise decimal calculations
+- `nodemon` - For development
+- `typescript` - For type safety and compilation
 
 ## Contributing
 
-Contributions are welcome! If you have suggestions for improving the bank statement analyzer, please open an issue or submit a pull request.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the ISC License.
+
+## Author
+
+[Your Name]
+
+## Acknowledgments
+
+- Thanks to all contributors who have helped with this project
+- Special thanks to the maintainers of the dependencies used in this project
