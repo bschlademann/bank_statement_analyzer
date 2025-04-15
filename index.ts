@@ -6,11 +6,12 @@ import {
   getTotalBalanceChange,
   createGetIncomesFromDebtor,
   creditorsBySpendingCategories,
+  getIncomes,
 } from "./domain";
 import { getBankStatement } from "./parseCsvToBankStatement";
 
 // update filename of csv here
-const filename = "february-2024";
+const filename = "2024-total-phine";
 
 const bankStatement = getBankStatement(filename);
 const getExpensesToCreditor = createGetExpensesToCreditor(bankStatement);
@@ -52,3 +53,4 @@ log(inspect(expensesBySpendingCategories, { depth: 3 }));
 // log(getIncomesFromDebtor("debtor_1"));
 // log(getExpensesToCreditor("food_creditor_1"));
 // log({ totalBalanceChange });
+// log(getIncomes(bankStatement))
