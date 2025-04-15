@@ -36,4 +36,11 @@ export type CreditorsBySpendingCategories = { [key: string]: readonly string[] }
 
 export type MissingEntries = { creditor: string; reference: string }[];
 
+export type ExpensesWithPercentage = {
+  [speendingCategory: string]: {
+      value: Decimal;
+      expensePercentage: Decimal;
+  };
+}[]
+
 export type ExpensesBySpendingCategories = {[spendingCategory: string]: Decimal}
