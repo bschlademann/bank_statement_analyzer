@@ -4,6 +4,7 @@ import {
   CreditorsBySpendingCategories,
   Expenses,
   ExpensesBySpendingCategories,
+  ExpensesWithPercentage,
   Incomes,
   MissingEntries,
   SpendingCategory,
@@ -131,24 +132,18 @@ export const createGetExpensesBySpendingCategories =
       });
 
       if (!found) {
+        // FIXME: add ChatGPT catch: if (expense.amount === -20.79 && creditor === "PayPal (Europe) S.a r.l. et Cie, S.C.A.") add amout to key chatGpt
         missingEntries.push(expense);
         totalExpenses = totalExpenses.plus(expense.amount);
       }
     });
 
-    type ExpensesWithPercentage = {
-      [speendingCategory: string]: {
-          value: Decimal;
-          expensePercentage: Decimal;
-      };
-  }[]
-
     const removeEmptyCategories = (
       expensesWithPercentage: ExpensesWithPercentage
     ): ExpensesWithPercentage => {
-      return expensesWithPercentage.filter(expense => 
-        Object.values(expense).some(spendingCategory => 
-          !spendingCategory.value.isZero()
+      return expensesWithPercentage.filter((expense) =>
+        Object.values(expense).some(
+          (spendingCategory) => !spendingCategory.value.isZero()
         )
       );
     };
@@ -182,3 +177,26 @@ export const getTotalBalanceChange = (bankStatement: BankStatement) =>
     (totalExpenses, expense) => totalExpenses.plus(expense.amount),
     new Decimal(0)
   );
+
+// FIXME: add getMonthlyAveragePerYear
+export const getMonthlyAveragePerYear = (expensesBySpendingCategories: {
+  totalExpenses: Decimal;
+  expensesWithPercentage: ExpensesWithPercentage;
+  missingEntries: MissingEntries;
+}) => {
+  const { expensesWithPercentage } =
+    expensesBySpendingCategories;
+
+  //   ExpensesWithPercentage = {
+  //     [speendingCategory: string]: {
+  //         value: Decimal;
+  //         expensePercentage: Decimal;
+  //     };
+  //   }[]
+
+  return {
+
+    expensesWithPercentage: expensesWithPercentage,
+
+  };
+};
